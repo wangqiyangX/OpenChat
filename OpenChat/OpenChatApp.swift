@@ -6,28 +6,38 @@
 // All Rights Reserved.
 //
 
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct OpenChatApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Item.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false
+        )
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(
+                for: schema,
+                configurations: [modelConfiguration]
+            )
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
 
+    @State private var conversationManager = ConversationManager()
+
     var body: some Scene {
         WindowGroup {
-            ChatView()
+            NavigationStack {
+                ChatView()
+            }
+            .environment(conversationManager)
         }
         .modelContainer(sharedModelContainer)
     }
